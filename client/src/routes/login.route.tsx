@@ -1,14 +1,83 @@
-import { createFileRoute } from '@tanstack/react-router'
-import React from 'react'
+import { createFileRoute } from "@tanstack/react-router";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { UserSchemaLogin, userSchema } from "../schemas/userSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+export const Route = createFileRoute("/login")({
+  component: LoginPage,
+});
 
-export const Route = createFileRoute('/login')({
-  component: LoginPage
-})
+export default function LoginPage() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserSchemaLogin>({
+    resolver: zodResolver(userSchema),
+  });
 
-export default function LoginPage(){
-  return(
-  <div>
-    <h1 className='bg-red'>Hello /longin!</h1>
-
-  </div>)
+  const onSubmit = async (data) => {
+    console.log("data", data);
+  };
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-blue-500">
+      <form
+        className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <h1 className="text-2xl font-bold mb-6 text-center text-blue-600">
+          Login
+        </h1>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="name">
+            Name
+          </label>
+          <input
+            className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:border-blue-500"
+            placeholder="Name"
+            id="name"
+            {...register("name")}
+          />
+          {errors.name && (
+            <span className="text-red-600">{errors.name.message}</span>
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="email">
+            Email
+          </label>
+          <input
+            className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:border-blue-500"
+            placeholder="Email"
+            id="email"
+            {...register("email")}
+          />
+          {errors.email && (
+            <span className="text-red-600">{errors.email.message}</span>
+          )}
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 mb-2" htmlFor="password">
+            Password
+          </label>
+          <input
+            className="border border-gray-300 p-2 w-full rounded focus:outline-none focus:border-blue-500"
+            placeholder="Password"
+            type="password"
+            id="password"
+            {...register("password")}
+          />
+          {errors.password && (
+            <span className="text-red-600">{errors.password.message}</span>
+          )}
+        </div>
+        <button
+          className="bg-blue-500 text-white p-2 w-full rounded hover:bg-blue-600"
+          type="submit"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+  );
 }
