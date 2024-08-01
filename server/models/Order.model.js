@@ -12,9 +12,9 @@ const orderSchema = new Schema(
      type: Number,
      required: [true, "Price is required."],
    },
-   user:{
+   customer:{
      type: Schema.Types.ObjectId,
-     ref: "User",
+     ref: "Customer",
    }
   },
   {
@@ -24,4 +24,4 @@ const orderSchema = new Schema(
 
 const Order = model("Order", orderSchema);
 
-module.exports = Item;
+module.exports = Order;

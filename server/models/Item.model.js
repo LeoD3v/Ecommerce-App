@@ -14,6 +14,10 @@ const itemSchema = new Schema(
         type: Schema.Types.ObjectId,
         ref: "Inventory",
       },
+      created_by: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      }
   },
   {
     timestamps: true,
