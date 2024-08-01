@@ -14,7 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup.route'
 import { Route as LogoutRouteImport } from './routes/logout.route'
 import { Route as LoginRouteImport } from './routes/login.route'
-import { Route as HomeRouteImport } from './routes/home.route'
+import { Route as DashboardRouteImport } from './routes/dashboard.route'
+import { Route as IndexRouteImport } from './routes/index.route'
 
 // Create/Update Routes
 
@@ -33,8 +34,13 @@ const LoginRouteRoute = LoginRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const HomeRouteRoute = HomeRouteImport.update({
-  path: '/home',
+const DashboardRouteRoute = DashboardRouteImport.update({
+  path: '/dashboard',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const IndexRouteRoute = IndexRouteImport.update({
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -42,11 +48,18 @@ const HomeRouteRoute = HomeRouteImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -76,7 +89,8 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren({
-  HomeRouteRoute,
+  IndexRouteRoute,
+  DashboardRouteRoute,
   LoginRouteRoute,
   LogoutRouteRoute,
   SignupRouteRoute,
@@ -90,14 +104,18 @@ export const routeTree = rootRoute.addChildren({
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/home",
+        "/",
+        "/dashboard",
         "/login",
         "/logout",
         "/signup"
       ]
     },
-    "/home": {
-      "filePath": "home.route.tsx"
+    "/": {
+      "filePath": "index.route.tsx"
+    },
+    "/dashboard": {
+      "filePath": "dashboard.route.tsx"
     },
     "/login": {
       "filePath": "login.route.tsx"

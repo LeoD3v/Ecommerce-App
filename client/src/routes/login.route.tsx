@@ -1,13 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { UserSchemaLogin, userSchema } from "../schemas/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useStore from "../store/useStore";
 export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
 export default function LoginPage() {
+  const { role, setRole } = useStore((state) => ({
+    role: state.role,
+    setRole: state.setRole,
+  }));
+
+  const navigate = useNavigate({ from: "/login" });
   const {
     register,
     handleSubmit,
@@ -17,7 +24,18 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data) => {
-    console.log("data", data);
+    const { name, email, password } = data;
+    if (
+      name === "Leandro" &&
+      email === "lalo@lalo.com" &&
+      password === "lalo"
+    ) {
+      navigate({ to: "/dashboard" });
+      setRole(true);
+
+      console.log("data", data);
+      console.log(role);
+    }
   };
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-500">
