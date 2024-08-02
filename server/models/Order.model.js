@@ -5,7 +5,7 @@ const orderSchema = new Schema(
    items: [
    {
     type: Schema.Types.ObjectId,
-    ref: "Inventory",
+    ref: "Item",
    }
   ],
    total: {

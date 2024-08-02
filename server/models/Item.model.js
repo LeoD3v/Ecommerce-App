@@ -10,10 +10,6 @@ const itemSchema = new Schema(
         type: Number,
         required: [true, "Price is required."],
       },
-      inventory: {
-        type: Schema.Types.ObjectId,
-        ref: "Inventory",
-      },
       created_by: {
         type: Schema.Types.ObjectId,
         ref: "User",
