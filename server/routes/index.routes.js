@@ -8,6 +8,24 @@ router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
 
+router.get('/items', async (req, res) => {
+  try {
+    const items = await Item.find();
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get('/users', async (req, res) => {
+  try {
+    const items = await User.find();
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.post('/order/create', async (req, res) => {
   try {
     const order = new Order(req.body);
