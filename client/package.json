@@ -16,6 +16,7 @@
     "@tanstack/react-table": "^8.19.3",
     "@tanstack/router-vite-plugin": "^1.45.13",
     "core-js": "^3.37.1",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "glob": "^11.0.0",
     "jsonwebtoken": "^9.0.2",

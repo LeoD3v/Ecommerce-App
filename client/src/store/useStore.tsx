@@ -1,10 +1,20 @@
 import { create } from "zustand";
 
+interface Items {
+  name: string;
+  price: number;
+  created_by: {
+    user: string;
+  };
+}
+
 interface RoleState {
   role: {
     admin: boolean;
   };
   setRole: (admin: boolean) => void;
+  items: Items[];
+  setItems: (items: Items[]) => void;
 }
 
 const useStore = create<RoleState>((set) => ({
@@ -15,5 +25,7 @@ const useStore = create<RoleState>((set) => ({
     set(() => ({
       role: { admin },
     })),
+  items: [],
+  setItems: (items) => set(() => ({ items })),
 }));
 export default useStore;
