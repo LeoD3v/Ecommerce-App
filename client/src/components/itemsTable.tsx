@@ -16,7 +16,6 @@ export type userBasicInfo = {
   updatedAt: Date;
 };
 export type Items = {
-  id: number;
   name: string;
   price: number;
   created_by: string;
@@ -31,7 +30,6 @@ async function fetchItems() {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const items = await response.json();
-    console.log(items);
     return items;
   } catch (error) {
     console.error("Failed to fetch items:", error);
@@ -42,9 +40,10 @@ async function fetchItems() {
 const columnHelper = createColumnHelper<Items>();
 
 const columns = [
-  columnHelper.accessor("id", {
+  columnHelper.display({
+    id: "rowNumber",
     header: () => "#",
-    cell: (info) => info.getValue(),
+    cell: (info) => info.row.index + 1,
   }),
   columnHelper.accessor("created_by", {
     header: () => "ID",
