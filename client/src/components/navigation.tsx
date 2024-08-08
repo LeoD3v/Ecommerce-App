@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import React from "react";
-import useStore from "../store/useStore";
+import { useStore } from "../store/useStore";
 
 export default function Navigation() {
   const { role, setRole } = useStore((state) => ({

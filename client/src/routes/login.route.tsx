@@ -3,7 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { UserSchemaLogin, userSchema } from "../schemas/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useStore from "../store/useStore";
+import { useStore } from "../store/useStore";
 export const Route = createFileRoute("/login")({
   component: LoginPage,
 });

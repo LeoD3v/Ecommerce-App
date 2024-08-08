@@ -1,23 +1,6 @@
 import { create } from "zustand";
-
-interface Items {
-  name: string;
-  price: number;
-  created_by: {
-    user: string;
-  };
-}
-
-interface RoleState {
-  role: {
-    admin: boolean;
-  };
-  setRole: (admin: boolean) => void;
-  items: Items[];
-  setItems: (items: Items[]) => void;
-}
-
-const useStore = create<RoleState>((set) => ({
+import { RoleState, FetchItems, Filters } from "../types";
+export const useStore = create<RoleState>((set) => ({
   role: {
     admin: false,
   },
@@ -25,7 +8,15 @@ const useStore = create<RoleState>((set) => ({
     set(() => ({
       role: { admin },
     })),
+}));
+
+export const filters = create<Filters>((set) => ({
+  filter: "",
+  setFilter: (filter) => set(() => ({ filter })),
+}));
+export const fetchItems = create<FetchItems>((set) => ({
   items: [],
   setItems: (items) => set(() => ({ items })),
 }));
-export default useStore;
+
+export default [filters, useStore, fetchItems];

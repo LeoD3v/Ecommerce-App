@@ -1,5 +1,4 @@
-import { ObjectId } from "mongoose";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -7,29 +6,23 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import SearchBar from "./searchBar";
+import { filters } from "../store/useStore";
+import { Items } from "../types";
 
-export type userBasicInfo = {
-  _id: ObjectId;
-  name: string;
-  items: Items[];
-  createdAt: Date;
-  updatedAt: Date;
-};
-export type Items = {
-  name: string;
-  price: number;
-  created_by: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-async function fetchItems() {
+async function fetchItems(filter: string) {
   try {
-    const response = await fetch("http://localhost:5005/api/items");
+    console.log(
+      `Fetching items with query: http://localhost:5005/api/items?name=${filter}`
+    );
+    const response = await fetch(
+      `http://localhost:5005/api/items?name_like=${filter}`
+    );
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const items = await response.json();
+    console.log(items);
     return items;
   } catch (error) {
     console.error("Failed to fetch items:", error);
@@ -64,6 +57,10 @@ const columns = [
 ];
 
 const ItemsTable = () => {
+  const { filter } = filters((state) => ({
+    filter: state.filter,
+  }));
+  console.log("this is the filter from table compoinent", filter);
   const queryClient = useQueryClient();
 
   const {
@@ -71,22 +68,28 @@ const ItemsTable = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["items"],
-    queryFn: fetchItems,
+    queryKey: ["items", filter],
+    queryFn: () => fetchItems(filter),
+    staleTime: 0,
   });
+
   const tableContent = useReactTable({
-    data,
+    data: data,
     columns,
     debugTable: true,
     getCoreRowModel: getCoreRowModel(),
   });
-  // console.log(tableContent.)
 
+  console.log("Query Key:", ["items", filter]);
+  console.log("Data after fetch:", data);
+  // console.log("Row model:", tableContent.getRowModel());
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  console.log(tableContent.getHeaderGroups());
+
   return (
     <div className="overflow-x-auto p-4">
+      <SearchBar />
+
       <table className="min-w-full divide-y divide-gray-200 border border-gray-300">
         <thead className="bg-gray-50">
           {tableContent.getHeaderGroups().map((headerGroup) => (

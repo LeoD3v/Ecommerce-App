@@ -8,13 +8,18 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/items", async (req, res) => {
-  try {
-    const items = await Items.find();
-    res.json(items);
-    console.log(items);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+  const { name_like } = req.query;
+  if (name_like) {
+    const itemsFiltered = await Items.find({ name: name_like });
+    res.json(itemsFiltered);
+  } else
+    try {
+      const items = await Items.find();
+      res.json(items);
+      console.log(items);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
 });
 
 router.get("/users", async (req, res) => {
