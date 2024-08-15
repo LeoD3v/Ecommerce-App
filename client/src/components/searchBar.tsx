@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { filters } from "../store/useStore";
 
 function SearchBar() {
@@ -6,26 +6,27 @@ function SearchBar() {
     filter: state.filter,
     setFilter: state.setFilter,
   }));
-
-  //   const [searchValue, setSearchValue] = useState("");
+  //   const inputRef = useRef(null);
   const [searchInputValue, setInputSearchValue] = useState("");
 
-  const submitSearchForm = (event) => {
-    event.preventDefault();
-
-    setFilter(searchInputValue);
-    console.log("filter set to", searchInputValue);
+  const clearSearch = () => {
     setInputSearchValue("");
+    setFilter("");
   };
-  console.log(searchInputValue);
+  //   useEffect(() => {
+  //     if (inputRef.current) {
+  //       inputRef.current.focus();
+  //     }
+  //   }, []);
   return (
-    <div className="py-2 text-right flex justify-end flex-row">
-      <form onSubmit={submitSearchForm} className="flex gap-1">
+    <div className="py-2 text-right flex justify-end flex-row ">
+      <form onSubmit={(e) => e.preventDefault()} className="flex gap-1">
         <div>
           <label htmlFor="search">
             <input
-              onChange={(e) => setInputSearchValue(e.target.value)}
-              value={searchInputValue}
+              //   ref={inputRef}
+              onChange={(e) => setFilter(e.target.value)}
+              value={filter}
               name="search"
               placeholder="Search"
               className="divide-y divide-gray-200 border border-gray-400 pl-2"
@@ -34,10 +35,11 @@ function SearchBar() {
         </div>
         <div>
           <button
+            onClick={clearSearch}
             className="px-1 divide-y divide-gray-200 border border-gray-400"
-            type="submit"
+            type="button"
           >
-            Search
+            Clear
           </button>
         </div>
       </form>

@@ -8,18 +8,35 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/items", async (req, res) => {
-  const { name_like } = req.query;
-  if (name_like) {
-    const itemsFiltered = await Items.find({ name: name_like });
-    res.json(itemsFiltered);
-  } else
-    try {
-      const items = await Items.find();
-      res.json(items);
-      console.log(items);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+  const { name_like = "", _start = 0, _limit = 10 } = req.query;
+
+  try {
+    const query = {};
+    if (name_like) {
+      query.name = { $regex: name_like, $options: "i" };
     }
+
+    // Convert _start and _limit to integers
+    const start = parseInt(_start, 10);
+    const limit = parseInt(_limit, 10);
+
+    if (isNaN(start) || isNaN(limit) || limit <= 0) {
+      return res.status(400).json({ message: "Invalid pagination parameters" });
+    }
+
+    // Fetch total count
+    const totalItems = await Items.countDocuments(query);
+
+    // Fetch items with pagination
+    const items = await Items.find(query).skip(start).limit(limit);
+
+    res.status(200).json({ items, totalItems });
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
+  }
 });
 
 router.get("/users", async (req, res) => {
@@ -42,12 +59,25 @@ router.post("/order/create", async (req, res) => {
 });
 
 router.post("/item/create", async (req, res) => {
+  console.log("the req.body", req.body);
   try {
-    const item = new Item(req.body);
+    const item = new Items(req.body);
     await item.save();
-    res.status(201).send(item);
+    res.status(201).json(item);
   } catch (error) {
     res.status(400).send(error);
+  }
+});
+router.get("/itemdetails/:id", async (req, res) => {
+  try {
+    const item = await Items.findById(req.params.id);
+    if (item) {
+      res.json(item);
+    } else {
+      res.status(404).json({ error: "Item not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

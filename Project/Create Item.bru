@@ -1,0 +1,31 @@
+meta {
+  name: Create Item
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:5005/api/item/create
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "Epson Printer (used)",
+    "price": 200,
+    "created_by": "64d4f82b1c4a1f1d3a3b4c6e",
+    "quantity": 5,
+    "description": "used.",
+    "type": "electronics",
+    "brand": "Epson",
+    "model": "Eps-FI233",
+    "serialNumbers": ["SN-1691498424011-7777", "SN-1191422462222-6666","SN-6391422412222-6663","SN-3691422412222-6116","SN-3691422412222-6556"]
+  }
+  
+  
+}

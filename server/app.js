@@ -10,9 +10,11 @@ require("./db");
 const express = require("express");
 
 const app = express();
+
 const cors = require("cors");
 app.use(cors());
 
+app.use(express.json());
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app);
 
