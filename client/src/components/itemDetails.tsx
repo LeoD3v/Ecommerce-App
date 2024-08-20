@@ -1,26 +1,28 @@
-import { getRouteApi } from "@tanstack/react-router";
+// import { getRouteApi } from "@tanstack/react-router";
 
 import React from "react";
 import { createPortal } from "react-dom";
-import { portalFormState } from "../store/useStore";
+import { portalEditState } from "../store/useStore";
+import { useItemDetails } from "../queries/itemDetailsQueries";
+// import { useItemDetails } from "../queries/itemDetailsQueries";
 
-// Example component for viewing and editing an item
-const ItemDetails = () => {
-  const { portal, setPortal } = portalFormState((state) => ({
-    portal: state.portal,
-    setPortal: state.setPortal,
-  }));
-  console.log(portal);
-  const route = getRouteApi("/itemdetails/$id");
-  const data = route.useLoaderData();
+const ItemDetails = ({ setPortalEdit, portalEdit }) => {
+  //   const { portalEdit, setPortalEdit } = portalEditState((state) => ({
+  //     portalEdit: state.portalEdit,
+  //     setPortalEdit: state.setPortalEdit,
+  //   }));
+  //   console.log(portalEdit);
 
-  if (!data) return <div>Loading...</div>;
+  //   const route = getRouteApi("/itemdetails/$id");
+  //   const data = route.useLoaderData();
+  const { data, isLoading } = useItemDetails(portalEdit.itemId);
+  //   if (!data) return <div>Loading...</div>;
   return createPortal(
-    <div className="fixed inset-0 flex items-center justify-center min-h-screen bg-blue-500 bg-opacity-30 backdrop-blur-sm z-[999] portal-overlay">
-      <div className="bg-white shadow-xl rounded-lg p-8 w-full max-w-4xl">
+    <div className="fixed inset-0 flex items-center justify-center min-h-screen  backdrop-blur-sm  z-[999] portal-overlay">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl border-2 border-blue-500">
         <div
           className="text-right text-blue-500 cursor-pointer mb-4"
-          onClick={setPortal}
+          onClick={() => setPortalEdit({ isOpen: false, itemId: null })}
         >
           X
         </div>
@@ -40,7 +42,7 @@ const ItemDetails = () => {
                 type="text"
                 id="type"
                 name="type"
-                value={data.type || ""}
+                value={data?.type || ""}
                 placeholder="type"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -56,7 +58,7 @@ const ItemDetails = () => {
                 type="text"
                 id="name"
                 name="name"
-                value={data.name || ""}
+                value={data?.name || ""}
                 placeholder="Enter your name"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -72,7 +74,7 @@ const ItemDetails = () => {
                 type="text"
                 id="createdBy"
                 name="createdBy"
-                value={data.created_by || ""}
+                value={data?.created_by || ""}
                 placeholder="created by"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -88,7 +90,7 @@ const ItemDetails = () => {
                 type="number"
                 id="price"
                 name="price"
-                value={data.price || ""}
+                value={data?.price || ""}
                 placeholder="price"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -104,7 +106,7 @@ const ItemDetails = () => {
                 type="text"
                 id="model"
                 name="model"
-                value={data.model || ""}
+                value={data?.model || ""}
                 placeholder="model"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -120,7 +122,7 @@ const ItemDetails = () => {
                 type="text"
                 id="brand"
                 name="brand"
-                value={data.brand || ""}
+                value={data?.brand || ""}
                 placeholder="brand"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -138,7 +140,7 @@ const ItemDetails = () => {
                 type="number"
                 id="quantity"
                 name="quantity"
-                value={data.quantity || ""}
+                value={data?.quantity || ""}
                 placeholder="quantity"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -153,7 +155,7 @@ const ItemDetails = () => {
               <textarea
                 id="serialNumbers"
                 name="serialNumbers"
-                value={data.serialNumbers || ""}
+                value={data?.serialNumbers || ""}
                 placeholder="Enter serial numbers separated by commas"
                 rows={6} // Adjust the number of rows for a larger container
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -170,7 +172,7 @@ const ItemDetails = () => {
                 type="text"
                 id="description"
                 name="description"
-                value={data.description || ""}
+                value={data?.description || ""}
                 placeholder="description"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -185,7 +187,7 @@ const ItemDetails = () => {
             </div>
             <div className="flex justify-center pt-1">
               <button
-                onClick={setPortal}
+                onClick={() => setPortalEdit({ isOpen: false, itemId: null })}
                 type="submit"
                 className="rounded-md w-[100%] bg-blue-500 text-white font-bold py-2 px-4  hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
               >

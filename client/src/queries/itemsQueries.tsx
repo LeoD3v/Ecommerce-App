@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-
 import { Items } from "../types";
 
 async function fetchItems(
@@ -28,14 +27,13 @@ async function fetchItems(
   }
 }
 export const useItems = (
-  filter: string,
   pageIndex: number,
   pageSize: number,
   debounceQuery: string
 ) => {
   return useQuery({
-    queryKey: ["items", filter, pageIndex, pageSize, debounceQuery],
-    queryFn: () => fetchItems(filter, pageIndex, pageSize),
+    queryKey: ["items", pageIndex, pageSize, debounceQuery],
+    queryFn: () => fetchItems(debounceQuery, pageIndex, pageSize),
     staleTime: 0,
     placeholderData: { items: [], totalItems: 0 },
   });

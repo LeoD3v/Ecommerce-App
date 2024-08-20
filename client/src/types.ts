@@ -1,12 +1,11 @@
 import { ObjectId } from "mongoose";
-// ZUSTAND STORE TYPES
 
 export type Items = {
   name: string;
   price: number;
   _id: ObjectId;
-  created_by: ObjectId;
-  descriptioni: string;
+  created_by: string;
+  description: string;
   quantity: number;
   type: "electronics" | "non-electronis";
   brand: string;
@@ -55,4 +54,11 @@ export interface PaginationType {
 export interface PortalType {
   portal: boolean;
   setPortal: () => void;
+}
+export interface PortalEditType {
+  portalEdit: { isOpen: boolean; itemId: ObjectId | null };
+  setPortalEdit: (payload: {
+    isOpen: boolean;
+    itemId: ObjectId | null;
+  }) => void;
 }
