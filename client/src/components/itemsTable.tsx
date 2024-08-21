@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import {
+  ColumnFiltersState,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -9,7 +11,7 @@ import { filters, paginationFilter, portalFormState } from "../store/useStore";
 import { PaginationType } from "../types";
 import { useDebounce } from "use-debounce";
 import { useItems } from "../queries/itemsQueries";
-import { columns } from "./table/tableColumns";
+import { columns } from "./table/tableContent";
 import TableRow from "./table/tableRows";
 import TablePagination from "./table/tablePagination";
 import TableContent from "./table/tableContent";
@@ -17,6 +19,7 @@ import CreateItemBtn from "./table/createItemBtn";
 import CreateItemForm from "./createItemForm";
 
 const ItemsTable = () => {
+  // const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   //|| get the filters from zustand
   const { filter } = filters((state) => ({
     filter: state.filter,
@@ -28,6 +31,7 @@ const ItemsTable = () => {
 
   //|| delay the for providing the filter to the tanstack query to perform the fetch on each input
   const [debounceQuery] = useDebounce(filter, 400);
+
   console.log("debounce", debounceQuery);
 
   //|| get the pagination from zustand and checks whether is a function or just a value
@@ -43,8 +47,10 @@ const ItemsTable = () => {
     pagination.pageSize,
     debounceQuery
   );
+
   const items = data?.items || [];
   const totalItems = data?.totalItems || 0;
+  //|| tanstack table instance
   const tableContent = useReactTable({
     data: items,
     columns: columns,
@@ -53,11 +59,12 @@ const ItemsTable = () => {
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
     onPaginationChange: setPagination,
+    getFilteredRowModel: getFilteredRowModel(),
     pageCount: Math.ceil(totalItems / pagination.pageSize),
     state: {
       pagination: {
         ...pagination,
-        pageSize: pagination.pageSize || 5, // Ensure default value
+        pageSize: pagination.pageSize || 5,
       },
     },
   });
@@ -86,7 +93,6 @@ const ItemsTable = () => {
   return (
     <>
       <div>{portal === true && <CreateItemForm />}</div>
-      {/* <div>{portalEdit.isOpen === true && <ItemDetails />}</div> */}
       <div className=" justify-end flex sticky top-0 bg-white z-10 mr-60">
         <SearchBar />
       </div>
@@ -95,7 +101,6 @@ const ItemsTable = () => {
           <table className="min-w-full divide-y  text-start rounded-xl">
             <TableContent tableContent={tableContent} />
             {tableContent.getRowModel().rows.map((row) => {
-              console.log("this is the iddddddd", row.id + 1); // This will log row.id
               return <TableRow key={row.id} rowId={row.id} row={row} />;
             })}
           </table>{" "}
@@ -110,5 +115,4 @@ const ItemsTable = () => {
     </>
   );
 };
-
 export default ItemsTable;
