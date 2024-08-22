@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import React from "react";
 import useStore from "../store/useStore";
-import ItemsTable from "../components/itemsTable";
+import TableRendering from "../components/tableRendering";
 
 // export default function LoginPage() {
 //   const { role, setRole } = useStore((state) => ({
@@ -11,5 +11,5 @@ import ItemsTable from "../components/itemsTable";
 // }
 
 export const Route = createFileRoute("/dashboard")({
-  component: () => <ItemsTable />,
+  component: () => <TableRendering />,
 });

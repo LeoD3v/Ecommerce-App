@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import {
-  ColumnFiltersState,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import SearchBar from "./searchBar";
@@ -18,8 +19,10 @@ import TableContent from "./table/tableContent";
 import CreateItemBtn from "./table/createItemBtn";
 import CreateItemForm from "./createItemForm";
 
-const ItemsTable = () => {
-  // const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+const TableRendering = () => {
+  const [columnResizeMode, setColumnResizeMode] = useState("onChange");
+  // const [sorting, setSorting] = React.useState<SortingState>([]); needs to be set to zustand
+  // const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);needs to be set to zustand
   //|| get the filters from zustand
   const { filter } = filters((state) => ({
     filter: state.filter,
@@ -59,18 +62,24 @@ const ItemsTable = () => {
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
     onPaginationChange: setPagination,
+    getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     pageCount: Math.ceil(totalItems / pagination.pageSize),
+    columnResizeMode,
     state: {
+      // sorting,
       pagination: {
         ...pagination,
         pageSize: pagination.pageSize || 5,
       },
     },
+    onColumnResize: setColumnResizeMode,
+    // onSortingChange: setSorting,
   });
 
   function paginationLength(e) {
     const valueAsString = e.target.value;
+    console.log("string or nujber", valueAsString);
     const valueToNumber = parseInt(valueAsString, 10);
     if (!isNaN(valueToNumber) && valueToNumber > 0) {
       setPagination((prev) => ({
@@ -115,4 +124,4 @@ const ItemsTable = () => {
     </>
   );
 };
-export default ItemsTable;
+export default TableRendering;

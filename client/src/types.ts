@@ -62,10 +62,3 @@ export interface PortalEditType {
     itemId: ObjectId | null;
   }) => void;
 }
-
-export interface ColumnFilter {
-  id: string;
-  value: unknown;
-}
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type ColumnFiltersState = ColumnFilter[];
