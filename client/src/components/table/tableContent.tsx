@@ -132,7 +132,7 @@ export default function TableContent({ tableContent }) {
                   }
                 >
                   <div className="flex row items-center justify-center ">
-                    <p>
+                    <span>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -145,14 +145,14 @@ export default function TableContent({ tableContent }) {
                           className="absolute right-0 top-0 h-full w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize"
                         />
                       )}
-                    </p>
+                    </span>
 
-                    <p className="ml-1">
+                    <span className="ml-1">
                       {{
                         asc: " 🔼",
                         desc: " 🔽",
                       }[header.column.getIsSorted() as string] ?? null}
-                    </p>
+                    </span>
                   </div>
                 </div>
                 {canFilterColumn(header.column) ? ( // Use the utility function here
