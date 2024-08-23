@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 
 import { useItemDetails } from "../queries/itemDetailsQueries";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateItemDetails } from "../queries/itemDetailsQueries"; 
+import { updateItemDetails } from "../queries/itemDetailsQueries";
 // import { useItemDetails } from "../queries/itemDetailsQueries";
 
 const ItemDetails = ({ setPortalEdit, portalEdit }) => {
@@ -49,7 +49,8 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
   }, [data]);
 
   const mutation = useMutation({
-    mutationFn: (updatedData) => updateItemDetails(portalEdit.itemId, updatedData),
+    mutationFn: (updatedData) =>
+      updateItemDetails(portalEdit.itemId, updatedData),
     onSuccess: () => {
       // Invalidate and refetch item details to ensure updated data is displayed
       queryClient.invalidateQueries(["item", portalEdit.itemId]);
@@ -65,9 +66,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
     mutation.mutate(formData);
   };
   //   if (!data) return <div>Loading...</div>;
- 
+
   return createPortal(
-    <div className="fixed inset-0 flex items-center justify-center min-h-screen backdrop-blur-sm z-[999] portal-overlay">
+    <div className="fixed inset-0 flex items-center justify-center min-h-screen  z-[999] portal-overlay">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl border-2 border-blue-500">
         <div
           className="text-right text-blue-500 cursor-pointer mb-4"
@@ -88,7 +89,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 <input
                   type="text"
                   value={formData.type}
-                  onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, type: e.target.value })
+                  }
                   placeholder="Type"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -104,7 +107,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   placeholder="Name"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -120,7 +125,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 <input
                   type="text"
                   value={formData.created_by}
-                  onChange={(e) => setFormData({ ...formData, created_by: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, created_by: e.target.value })
+                  }
                   placeholder="Created By"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -136,7 +143,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 <input
                   type="number"
                   value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: e.target.value })
+                  }
                   placeholder="Price"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -152,7 +161,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 <input
                   type="text"
                   value={formData.model}
-                  onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, model: e.target.value })
+                  }
                   placeholder="Model"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -168,7 +179,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 <input
                   type="text"
                   value={formData.brand}
-                  onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, brand: e.target.value })
+                  }
                   placeholder="Brand"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -186,7 +199,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 <input
                   type="number"
                   value={formData.quantity}
-                  onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, quantity: e.target.value })
+                  }
                   placeholder="Quantity"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -201,7 +216,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
               {isEditing ? (
                 <textarea
                   value={formData.serialNumbers}
-                  onChange={(e) => setFormData({ ...formData, serialNumbers: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, serialNumbers: e.target.value })
+                  }
                   placeholder="Enter serial numbers separated by commas"
                   rows={6}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -218,7 +235,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 <input
                   type="text"
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   placeholder="Description"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
