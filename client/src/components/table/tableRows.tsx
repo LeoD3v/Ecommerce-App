@@ -1,17 +1,26 @@
 import React from "react";
-import { flexRender } from "@tanstack/react-table";
+import {
+  Cell,
+  CellContext,
+  flexRender,
+  RowData,
+  RowModel,
+  TableMeta,
+} from "@tanstack/react-table";
 import { portalEditState } from "../../store/useStore";
 import { Items } from "../../types";
 import ItemDetails from "../itemDetails";
+import { Indices } from "zod";
+
 export default function TableRow({ row, rowId }) {
   //|| get the portal to edit items from zustand
   const { portalEdit, setPortalEdit } = portalEditState((state) => ({
     portalEdit: state.portalEdit,
     setPortalEdit: state.setPortalEdit,
   }));
-  const handleMouseUp = (rowData) => {
+  const handleMouseUp = (rowData: Items) => {
+    console.log("what is this ", rowData);
     const selection = window.getSelection()?.toString();
-    console.log("what is this ", selection);
     if (!selection) {
       handleRowClick(rowData);
     }
@@ -41,7 +50,7 @@ export default function TableRow({ row, rowId }) {
           }`}
           onClick={() => handleMouseUp(row.original)}
         >
-          {row.getVisibleCells().map((cell) => (
+          {row.getVisibleCells().map((cell: Cell<Items, unknown>) => (
             <td
               key={`${rowId} + ${cell.id}`}
               className=" px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 border border-gray-300 "

@@ -1,14 +1,28 @@
-import { flexRender } from "@tanstack/react-table";
+import {
+  CellContext,
+  Column,
+  ColumnDef,
+  flexRender,
+  HeaderGroup,
+  RowData,
+} from "@tanstack/react-table";
 import React from "react";
 import ColumnFilter from "./columnFilter";
-function canFilterColumn(column) {
-  return column.columnDef.meta?.enableFiltering ?? false;
+import { Items } from "../../types";
+
+function canFilterColumn<TData extends RowData, TValue>(
+  column: Column<TData, TValue>
+): boolean {
+  const meta = column.columnDef.meta as
+    | { enableFiltering?: boolean }
+    | undefined;
+  return meta?.enableFiltering ?? false;
 }
-export const columns = [
+export const columns: ColumnDef<Items, any>[] = [
   {
     accessorKey: "rowNumber",
     header: () => "#",
-    cell: (info) => info.row.index + 1,
+    cell: (info: CellContext<Items, Date>) => info.row.index + 1,
     enableSorting: false,
     enableResizing: true,
     minSize: 10,
@@ -82,7 +96,7 @@ export const columns = [
   {
     accessorKey: "createdAt",
     header: () => "Date Created",
-    cell: (info) => {
+    cell: (info: CellContext<Items, Date>) => {
       const data = new Date(info.getValue());
       return data.toLocaleDateString();
     },
@@ -98,72 +112,74 @@ export default function TableContent({ tableContent }) {
   return (
     <>
       <thead className="bg-blue-500  sticky top-0 z-10 shadow-xl">
-        {tableContent.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th
-                key={header.id}
-                style={{
-                  width: header.getSize(),
-                  minWidth: "50px", // Ensure there's a minimum width
-                  maxWidth: "400px",
-                }}
-                className={`relative px-6 py-3 text-center resizer  text-white text-xs font-medium  uppercase tracking-wider border border-gray-300`}
-              >
-                {" "}
-                <div
-                  className={`${
-                    header.column.getCanSort()
-                      ? "cursor-pointer select-none"
-                      : ""
-                  }`}
-                  onClick={
-                    (console.log("sorting Toogled"),
-                    header.column.getToggleSortingHandler())
-                  }
-                  title={
-                    header.column.getCanSort()
-                      ? header.column.getNextSortingOrder() === "asc"
-                        ? "Sort ascending"
-                        : header.column.getNextSortingOrder() === "desc"
-                          ? "Sort descending"
-                          : "Clear sort"
-                      : undefined
-                  }
+        {tableContent
+          .getHeaderGroups()
+          .map((headerGroup: HeaderGroup<Items>) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th
+                  key={header.id}
+                  style={{
+                    width: header.getSize(),
+                    minWidth: "50px", // Ensure there's a minimum width
+                    maxWidth: "400px",
+                  }}
+                  className={`relative px-6 py-3 text-center resizer  text-white text-xs font-medium  uppercase tracking-wider border border-gray-300`}
                 >
-                  <div className="flex row items-center justify-center ">
-                    <span>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                      {header.column.getCanResize() && (
-                        <div
-                          onMouseDown={header.getResizeHandler()}
-                          className="absolute right-0 top-0 h-full w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize"
-                        />
-                      )}
-                    </span>
+                  {" "}
+                  <div
+                    className={`${
+                      header.column.getCanSort()
+                        ? "cursor-pointer select-none"
+                        : ""
+                    }`}
+                    onClick={
+                      (console.log("sorting Toogled"),
+                      header.column.getToggleSortingHandler())
+                    }
+                    title={
+                      header.column.getCanSort()
+                        ? header.column.getNextSortingOrder() === "asc"
+                          ? "Sort ascending"
+                          : header.column.getNextSortingOrder() === "desc"
+                            ? "Sort descending"
+                            : "Clear sort"
+                        : undefined
+                    }
+                  >
+                    <div className="flex row items-center justify-center ">
+                      <span>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                        {header.column.getCanResize() && (
+                          <div
+                            onMouseDown={header.getResizeHandler()}
+                            className="absolute right-0 top-0 h-full w-1 bg-gray-400 hover:bg-gray-600 cursor-col-resize"
+                          />
+                        )}
+                      </span>
 
-                    <span className="ml-1">
-                      {{
-                        asc: " 🔼",
-                        desc: " 🔽",
-                      }[header.column.getIsSorted() as string] ?? null}
-                    </span>
+                      <span className="ml-1">
+                        {{
+                          asc: " 🔼",
+                          desc: " 🔽",
+                        }[header.column.getIsSorted() as string] ?? null}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                {canFilterColumn(header.column) ? ( // Use the utility function here
-                  <div>
-                    <ColumnFilter column={header.column} />
-                  </div>
-                ) : null}
-              </th>
-            ))}
-          </tr>
-        ))}
+                  {canFilterColumn(header.column) ? ( // Use the utility function here
+                    <div>
+                      <ColumnFilter column={header.column} />
+                    </div>
+                  ) : null}
+                </th>
+              ))}
+            </tr>
+          ))}
       </thead>
     </>
   );

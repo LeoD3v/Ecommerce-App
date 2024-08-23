@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import SearchBar from "./searchBar";
@@ -20,7 +19,7 @@ import CreateItemBtn from "./table/createItemBtn";
 import CreateItemForm from "./createItemForm";
 
 const TableRendering = () => {
-  const [columnResizeMode, setColumnResizeMode] = useState("onChange");
+  const [columnSizing, setColumnSizing] = useState({});
   // const [sorting, setSorting] = React.useState<SortingState>([]); needs to be set to zustand
   // const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);needs to be set to zustand
   //|| get the filters from zustand
@@ -53,31 +52,33 @@ const TableRendering = () => {
 
   const items = data?.items || [];
   const totalItems = data?.totalItems || 0;
+
   //|| tanstack table instance
   const tableContent = useReactTable({
     data: items,
     columns: columns,
-    debugTable: true,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
-    onPaginationChange: setPagination,
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     pageCount: Math.ceil(totalItems / pagination.pageSize),
-    columnResizeMode,
+    columnResizeMode: "onChange",
+    debugTable: true,
     state: {
       // sorting,
       pagination: {
         ...pagination,
         pageSize: pagination.pageSize || 5,
       },
+      columnSizing,
     },
-    onColumnResize: setColumnResizeMode,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnSizingChange: (newColumnSizing) => setColumnSizing(newColumnSizing),
     // onSortingChange: setSorting,
   });
 
-  function paginationLength(e) {
+  function paginationLength(e: ChangeEvent<HTMLInputElement>) {
     const valueAsString = e.target.value;
     console.log("string or nujber", valueAsString);
     const valueToNumber = parseInt(valueAsString, 10);

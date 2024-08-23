@@ -2,9 +2,8 @@
 
 import React from "react";
 import { createPortal } from "react-dom";
-import { portalEditState } from "../store/useStore";
+
 import { useItemDetails } from "../queries/itemDetailsQueries";
-// import { useItemDetails } from "../queries/itemDetailsQueries";
 
 const ItemDetails = ({ setPortalEdit, portalEdit }) => {
   //   const { portalEdit, setPortalEdit } = portalEditState((state) => ({
@@ -16,7 +15,9 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
   //   const route = getRouteApi("/itemdetails/$id");
   //   const data = route.useLoaderData();
   const { data, isLoading } = useItemDetails(portalEdit.itemId);
-  //   if (!data) return <div>Loading...</div>;
+
+  // if (!data) return <div>Loading...</div>;
+  if (isLoading) return <div>Loading...</div>;
   return createPortal(
     <div className="fixed inset-0 flex items-center justify-center min-h-screen  backdrop-blur-sm  z-[999] portal-overlay">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-4xl border-2 border-blue-500">
@@ -157,7 +158,7 @@ const ItemDetails = ({ setPortalEdit, portalEdit }) => {
                 name="serialNumbers"
                 value={data?.serialNumbers || ""}
                 placeholder="Enter serial numbers separated by commas"
-                rows={6} // Adjust the number of rows for a larger container
+                rows={6}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>

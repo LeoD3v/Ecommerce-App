@@ -10,7 +10,7 @@ const CommonProperties = z.object({
     .regex(objectIdRegex, "Invaide ObjectId")
     .min(1, "Created by must be provided"),
   serialNumbers: z
-    .string() // Expect a string
+    .string()
     .transform((value) =>
       value
         .split(",")

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { createPortal } from "react-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import {
@@ -7,13 +7,15 @@ import {
 } from "../schemas/addItemSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { portalFormState } from "../store/useStore";
+import { ApiResponse } from "../types";
+import { ZodError } from "zod";
 
 export default function CreateItemForm() {
-  const [serialNumbers, setSerialNumbers] = useState([]);
+  const [serialNumbers, setSerialNumbers] = useState<string[]>([]);
 
   // console.log("this is the s#", serialNumbers);
 
-  const handleSerialNumbersChange = (e) => {
+  const handleSerialNumbersChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const numbersArray = value.split(",").map((sn) => sn.trim());
     setSerialNumbers(numbersArray);
@@ -24,7 +26,7 @@ export default function CreateItemForm() {
     },
     resolver: zodResolver(createItemFormSchema),
   });
-  async function createItems(data) {
+  async function createItems(data: AddItemformSchema): Promise<ApiResponse> {
     try {
       const response = await fetch(`http://localhost:5005/api/item/create`, {
         method: "POST",
@@ -40,6 +42,7 @@ export default function CreateItemForm() {
       return result;
     } catch (error) {
       console.error("Failed to create item", error);
+      throw error;
     }
   }
 
@@ -47,14 +50,24 @@ export default function CreateItemForm() {
     setPortal: state.setPortal,
   }));
 
-  const submitForm = async (data) => {
+  const submitForm = async (data: AddItemformSchema) => {
     try {
       console.log("Submitted data:", data);
+      // const parsedData = createItemFormSchema.parse(data);
+
       createItems(data);
-      setPortal();
     } catch (error) {
+      if (error instanceof ZodError) {
+        // Handle validation errors
+        console.error("Validation error:", error.errors);
+        // Optionally display user-friendly error messages
+      } else {
+        // Handle other errors (e.g., network errors)
+        console.error("Submission error:", error);
+      }
       console.error("Submission error:", error);
     }
+    setPortal();
   };
 
   const onError = (errors) => {
@@ -264,4 +277,7 @@ export default function CreateItemForm() {
     </div>,
     document.body
   );
+}
+function generateObjectId(): ObjectId {
+  throw new Error("Function not implemented.");
 }

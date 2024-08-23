@@ -10,11 +10,15 @@ export type Items = {
   type: "electronics" | "non-electronis";
   brand: string;
   model: string;
-  serialNumbers: number[];
+  serialNumbers: string[];
   createdAt: Date;
   updatedAt: Date;
 };
 
+export interface ApiResponse {
+  success: boolean;
+  item: Items;
+}
 export interface RoleState {
   role: {
     admin: boolean;
@@ -40,7 +44,12 @@ export interface UserBasicInfo {
   updatedAt: Date;
 }
 
-import { PaginationState } from "@tanstack/react-table";
+import {
+  CellContext,
+  ColumnMeta,
+  PaginationState,
+  RowData,
+} from "@tanstack/react-table";
 
 export interface PaginationType {
   pagination: PaginationState;
@@ -61,4 +70,8 @@ export interface PortalEditType {
     isOpen: boolean;
     itemId: ObjectId | null;
   }) => void;
+}
+
+export interface SubmitFormType {
+  submit: (data: FormData) => void;
 }
