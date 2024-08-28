@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const Order = require("../models/Order.model");
 const Items = require("../models/Item.model");
 const User = require("../models/User.model");
+const Customer = require("../models/Customer.model");
 router.get("/", (req, res, next) => {
   res.json("All good in here");
 });
@@ -48,16 +48,6 @@ router.get("/users", async (req, res) => {
   }
 });
 
-router.post("/order/create", async (req, res) => {
-  try {
-    const order = new Order(req.body);
-    await order.save();
-    res.status(201).send(order);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
-
 router.post("/item/create", async (req, res) => {
   console.log("the req.body", req.body);
   try {
@@ -90,6 +80,16 @@ router.put("/itemdetails/update/:id", async (req, res) => {
     res.status(200).json(updatedItem);
   } catch (error) {
     res.status(400).json({ error: error.message });
+  }
+});
+
+router.post("/customer/create", async (req, res) => {
+  try {
+    const customer = new Customer(req.body);
+    await customer.save();
+    res.status(201).json(customer);
+  } catch (error) {
+    res.status(400).send(error);
   }
 });
 

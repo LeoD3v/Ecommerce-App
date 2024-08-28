@@ -17,10 +17,10 @@ const customerSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-    items: [
+    orders: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Item",
+        ref: "Order",
       }
     ]
   },
