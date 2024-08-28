@@ -30,15 +30,14 @@ router.get("/", async (req, res) => {
     const { items, customer } = req.body;
   
     try {
-      // Validate customer
       const foundCustomer = await Customer.findById(customer);
       if (!foundCustomer) {
         return res.status(400).json({ error: "Customer not found" });
       }
   
-      // Validate and process items
-      const itemIds = items.map(item => item.id);
+      const itemIds = items.map(item => item.item); 
       const foundItems = await Item.find({ _id: { $in: itemIds } });
+  
       const itemMap = foundItems.reduce((map, item) => {
         map[item._id.toString()] = item;
         return map;
@@ -47,44 +46,46 @@ router.get("/", async (req, res) => {
       let total = 0;
   
       for (const item of items) {
-        const itemDetails = itemMap[item.id];
+        const itemDetails = itemMap[item.item]; 
         if (!itemDetails) {
-          return res.status(400).json({ error: `Item ${item.id} not found` });
+          return res.status(400).json({ error: `Item ${item.item} not found` });
         }
   
         if (item.quantity > itemDetails.quantity) {
-          return res.status(400).json({ error: `Insufficient quantity for item ${item.id}` });
+          return res.status(400).json({ error: `Insufficient quantity for item ${item.item}` });
         }
   
         if (item.serialNumbers.length !== item.quantity) {
-          return res.status(400).json({ error: `Number of serial numbers must match the quantity for item ${item.id}` });
+          return res.status(400).json({ error: `Number of serial numbers must match the quantity for item ${item.item}` });
         }
   
-        // Deduct quantity and update item
+    
+        itemDetails.serialNumbers = itemDetails.serialNumbers.filter(
+          serialNumber => !item.serialNumbers.includes(serialNumber)
+        );
+  
         itemDetails.quantity -= item.quantity;
         await itemDetails.save();
   
         total += itemDetails.price * item.quantity;
       }
   
-      // Create new order
       const newOrder = new Order({
         items: items.map(item => ({
-          id: item.id,
+          item: item.item, 
           quantity: item.quantity,
-          serialNumbers: item.serialNumbers,
+          serialNumbers: item.serialNumbers
         })),
         total,
         customer,
       });
   
       await newOrder.save();
-      res.status(201).json(newOrder);
   
+      res.status(201).json(newOrder);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
   });
   
-
   module.exports = router;

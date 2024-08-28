@@ -2,12 +2,19 @@ const { Schema, model } = require("mongoose");
 
 const orderSchema = new Schema(
   {
-   items: [
-   {
-    type: Schema.Types.ObjectId,
-    ref: "Item",
-   }
-  ],
+    items: [
+      {
+        item: {
+          type: Schema.Types.ObjectId,
+          ref: "Item",
+        },
+        quantity: {
+          type: Number,
+          required: true
+        },
+        serialNumbers: [String],
+      }
+    ],
    total: {
      type: Number,
      required: [true, "Price is required."],
